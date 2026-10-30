@@ -178,3 +178,4 @@ footer.menu small{color:var(--muted);font-size:13px;line-height:1.5}
 .center .box{width:100%;max-width:420px;display:grid;gap:12px}
 .center h1{font-family:var(--display);font-size:48px;margin:0;line-height:.9}
 .center h1 em{font-style:normal;color:var(--neon)}
+.powered a{color:inherit}
