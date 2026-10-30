@@ -162,3 +162,4 @@
 /* botão flutuante whatsapp */
 .lp-zap{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;align-items:center;gap:8px;background:#25d366;color:#fff;text-decoration:none;font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;padding:12px 16px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .lp-zap svg{width:20px;height:20px;fill:#fff}
+.lp .case-txt{font-size:18px;line-height:1.55;color:var(--fg);margin:14px 0 12px;max-width:56ch}
