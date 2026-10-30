@@ -50,7 +50,7 @@ export default function Importar() {
         body: JSON.stringify(corpo),
       })
       const j = await r.json().catch(() => ({}))
-      if (!r.ok) throw new Error(j.erro || 'Falha na leitura.')
+      if (!r.ok) throw new Error((j.erro || 'Falha na leitura.') + (j.detalhe ? ` (${j.detalhe})` : ''))
       setCats(j.categorias.map(c => ({ ...c, itens: c.itens.map(i => ({ ...i, preco: String(i.preco).replace('.', ',') })) })))
       setFase('revisao')
     } catch (e) { setErro(e.message); setFase('envio') }
