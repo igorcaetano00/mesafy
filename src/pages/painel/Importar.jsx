@@ -7,9 +7,10 @@ const MAX = 4 * 1024 * 1024
 
 // Reduz foto grande antes de enviar (limite do servidor ~4 MB)
 async function reduzir(file) {
-  if (!file.type.startsWith('image/') || file.size < 1.5 * 1024 * 1024) return file
+  if (!file.type.startsWith('image/')) return file
   const bmp = await createImageBitmap(file)
-  const s = Math.min(1, 2000 / Math.max(bmp.width, bmp.height))
+  const s = Math.min(1, 1600 / Math.max(bmp.width, bmp.height))
+  if (s === 1 && file.size < 1024 * 1024) return file
   const c = document.createElement('canvas'); c.width = bmp.width * s; c.height = bmp.height * s
   c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height)
   const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.85))
