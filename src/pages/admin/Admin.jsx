@@ -6,6 +6,7 @@ import Visao from './Visao'
 import Clientes from './Clientes'
 import Ficha from './Ficha'
 import Pagamentos from './Pagamentos'
+import Consumidores from './Consumidores'
 import '../../styles/admin.css'
 
 const ADMINS = ['igorantcaetano@gmail.com'] // espelha is_admin() no banco
@@ -46,6 +47,7 @@ function Shell() {
             <NavLink to="/admin" end>Visão geral</NavLink>
             <NavLink to="/admin/clientes">Clientes</NavLink>
             <NavLink to="/admin/pagamentos">Pagamentos</NavLink>
+            <NavLink to="/admin/consumidores">Consumidores</NavLink>
             <a href="/" target="_blank" rel="noopener">Site ↗</a>
             <a href="#" onClick={e => { e.preventDefault(); supabase.auth.signOut() }} title={user.email}>Sair</a>
           </nav>
@@ -58,6 +60,7 @@ function Shell() {
             <Route path="clientes" element={<Clientes />} />
             <Route path="clientes/:id" element={<Ficha />} />
             <Route path="pagamentos" element={<Pagamentos />} />
+            <Route path="consumidores" element={<Consumidores />} />
             <Route path="*" element={<Navigate to="/admin" />} />
           </Routes>
         )}
