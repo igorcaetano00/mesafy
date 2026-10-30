@@ -7,6 +7,7 @@ import Pedidos from './Pedidos'
 import QR from './QR'
 import Config from './Config'
 import Onboarding from './Onboarding'
+import Importar from './Importar'
 
 function Shell() {
   const { session, rest, user } = useAuth()
@@ -31,6 +32,7 @@ function Shell() {
         <Route index element={<Resumo />} />
         <Route path="pedidos" element={<Pedidos />} />
         <Route path="cardapio" element={<Cardapio />} />
+        <Route path="importar" element={<Importar />} />
         <Route path="qr" element={<QR />} />
         <Route path="config" element={<Config />} />
         <Route path="*" element={<Navigate to="/painel" />} />

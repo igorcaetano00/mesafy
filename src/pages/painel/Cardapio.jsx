@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import { supabase, fmt } from '../../lib/supabase'
 
@@ -48,7 +49,7 @@ export default function Cardapio() {
     <div className="page">
       <div className="rowx" style={{ justifyContent: 'space-between' }}>
         <div><h1>Cardápio</h1><p className="sub">Altere preços, marque esgotado, reorganize. Muda na hora para o cliente.</p></div>
-        <button className="btn" onClick={() => setEdit({ tipo: 'cat', data: { nome: '', subtitulo: '', ordem: cats.length + 1, ativa: true } })}>+ Categoria</button>
+        <div className="rowx"><Link className="btn ghost" to="/painel/importar">Importar de PDF, foto ou Word</Link><button className="btn" onClick={() => setEdit({ tipo: 'cat', data: { nome: '', subtitulo: '', ordem: cats.length + 1, ativa: true } })}>+ Categoria</button></div>
       </div>
 
       {cats.map((c, ci) => {
