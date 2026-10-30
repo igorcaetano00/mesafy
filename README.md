@@ -1,7 +1,9 @@
-# Garçom Online
+# FOODPORN Menu
 
 Cardápio digital no QR Code com pedido pelo WhatsApp, painel do restaurante e painel admin da plataforma.
-Domínio: **garcononline.com.br**
+Domínio: **foodporn.com.br** (garcononline.com.br redireciona para ele)
+
+Inclui a landing da marca FOODPORN com a vitrine de e-books (Hotmart). Capas e logo em `public/fp/`.
 
 Stack: React (Vite) no **Cloudflare Pages** + Pages Functions (`functions/`) + Supabase (banco, login, tempo real, fotos) + Gemini (leitura de cardápio).
 
@@ -22,10 +24,10 @@ Stack: React (Vite) no **Cloudflare Pages** + Pages Functions (`functions/`) + S
 Depois de mudar uma variável, rode um novo deploy (Deployments > Retry deployment).
 
 ### Domínio próprio
-1. Em Cloudflare: Add a domain > `garcononline.com.br` (plano Free).
+1. Em Cloudflare: Add a domain > `foodporn.com.br` (plano Free).
 2. No registro.br, troque os servidores DNS pelos dois que o Cloudflare indicar.
-3. No projeto Pages: Custom domains > adicione `garcononline.com.br` e `www.garcononline.com.br`.
-4. No Supabase: Authentication > URL Configuration > Site URL `https://garcononline.com.br` e Redirect URLs `https://garcononline.com.br/**`.
+3. No projeto Pages: Custom domains > adicione `foodporn.com.br` e `www.foodporn.com.br`.
+4. No Supabase: Authentication > URL Configuration > Site URL `https://foodporn.com.br` e Redirect URLs `https://foodporn.com.br/**`.
 
 ## Supabase
 1. SQL Editor: rode `supabase/schema.sql`, depois `supabase/admin.sql`. `supabase/seed_jhonnys.sql` cria o restaurante piloto.
@@ -61,4 +63,4 @@ src/lib/comercial.js       preços, links de pagamento, regras de cobrança
 - Webhook do Asaas (pagamento entra sozinho e atualiza o status)
 - Despesas e relatórios do restaurante
 - Delivery com taxa por bairro
-- Subdomínio por restaurante (`bar.garcononline.com.br`), já suportado no código
+- Subdomínio por restaurante (`bar.foodporn.com.br`), já suportado no código
