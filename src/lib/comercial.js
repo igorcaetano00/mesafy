@@ -1,9 +1,10 @@
-// Configuração comercial do Mesafy (um lugar só para o admin)
+// Configuração comercial do Garçom Online (um lugar só para o admin)
 export const PRECO_MES = 149.9
 export const PRECO_ANO = 1199
 export const LINK_MENSAL = 'https://www.asaas.com/000/c/s2zixj3vfwpkoyf7'
 export const LINK_ANUAL = 'https://www.asaas.com/000/c/cdkuyf36tv3frp5d'
-export const SITE = 'https://mesafy-app.netlify.app'
+// Endereço atual do site (vale para o domínio provisório e para garcononline.com.br)
+export const SITE = typeof window !== 'undefined' ? window.location.origin : 'https://garcononline.com.br'
 
 export const STATUS = {
   trial: { rotulo: 'Teste', cls: 'warn' },
@@ -31,7 +32,7 @@ export function msgCobranca(c) {
   const link = c.plano === 'anual' ? LINK_ANUAL : LINK_MENSAL
   const nome = (c.contato_nome || '').split(' ')[0] || 'tudo bem'
   const venc = c.proximo_vencimento ? ` com vencimento em ${data(c.proximo_vencimento)}` : ''
-  return `Olá, ${nome}! Aqui é o Igor, do Mesafy. Passando para lembrar da mensalidade do cardápio digital do ${c.nome}${venc}, no valor de ${brl(c.valor_mensal || (c.plano === 'anual' ? PRECO_ANO : PRECO_MES))}.\n\nPode pagar por Pix, boleto ou cartão neste link: ${link}\n\nQualquer dúvida, é só me chamar.`
+  return `Olá, ${nome}! Aqui é o Igor, do Garçom Online. Passando para lembrar da mensalidade do cardápio digital do ${c.nome}${venc}, no valor de ${brl(c.valor_mensal || (c.plano === 'anual' ? PRECO_ANO : PRECO_MES))}.\n\nPode pagar por Pix, boleto ou cartão neste link: ${link}\n\nQualquer dúvida, é só me chamar.`
 }
 
 // Saúde do cliente: o que precisa de atenção
