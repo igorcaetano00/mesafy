@@ -1,0 +1,56 @@
+/* Painel administrativo da plataforma (prefixo adm-) */
+.adm .page{max-width:1240px}
+.adm-tag{font-family:var(--cond);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber);border-radius:3px;padding:1px 6px;vertical-align:middle;margin-left:6px}
+.adm .small,.adm small.small{font-size:12.5px}
+.adm-h{font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:15px;margin:0}
+.adm .kpi .s{margin-top:6px;font-size:13px}
+.adm-hi{border-color:color-mix(in srgb,var(--neon) 55%,var(--line))}
+.adm-hi .v{color:var(--neon)}
+.adm-bad{border-color:color-mix(in srgb,var(--err) 55%,var(--line))}
+.adm-v{font-size:26px!important}
+.adm-st{display:flex;flex-direction:column;gap:8px;text-decoration:none;align-items:flex-start}
+.adm-st b{font-family:var(--display);font-size:32px;line-height:1}
+a.adm-st:hover{border-color:var(--muted)}
+.adm-2col{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px;margin-top:12px;align-items:start}
+@media (max-width:900px){.adm-2col{grid-template-columns:1fr}}
+.adm-alert{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.adm-alert:last-child{border-bottom:0}
+.adm-nome{font-weight:700;text-decoration:none}
+.adm-nome:hover{text-decoration:underline}
+.btn.sm{padding:6px 10px;font-size:12px}
+.adm-bars{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;height:200px;align-items:end;margin-top:12px}
+.adm-bars .adm-bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
+.adm-bars .adm-bar i{display:block;width:100%;max-width:34px;min-height:2px;background:var(--neon);border-radius:3px 3px 0 0;opacity:.85}
+.adm-bars .adm-bar .v{font-size:10.5px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.adm-bars .adm-bar .m{font-family:var(--cond);font-size:11px;text-transform:uppercase;color:var(--muted)}
+.adm-filtros{display:grid;gap:10px;margin-bottom:12px}
+.adm-filtros input[type=search]{max-width:420px}
+.chip{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:6px 12px;font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px;cursor:pointer}
+.chip small{opacity:.7;margin-left:4px}
+.chip.on{color:var(--fg);border-color:var(--neon);background:color-mix(in srgb,var(--neon) 12%,transparent)}
+.adm-tblwrap{overflow-x:auto;padding:0}
+.adm-tblwrap .tbl{min-width:820px}
+.adm-tblwrap .tbl th,.adm-tblwrap .tbl td{padding:10px 12px}
+.adm-tbl tbody tr:hover{background:color-mix(in srgb,var(--fg) 3%,transparent)}
+.adm-txtbad{color:var(--err)}
+.adm-off td{opacity:.5}
+.adm-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap;margin:8px 0 12px}
+.adm-head h1{margin-bottom:8px}
+.adm-inset{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px}
+.adm-nota{padding:8px 0;border-top:1px dashed var(--line);display:grid;gap:2px;white-space:pre-wrap}
+.adm-links{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.linkbtn{background:none;border:0;padding:0;color:var(--fg);text-decoration:underline;cursor:pointer;font:inherit}
+.adm-danger{border-color:color-mix(in srgb,var(--err) 35%,var(--line))}
+.adm-erro{border-color:var(--err);color:#ffb3b3}
+.adm-box{max-width:720px!important}
+.adm input,.adm select,.adm textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:4px;padding:9px 10px;font:inherit;font-size:15px}
+.adm input[type=month]{width:auto}
+.adm .f{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.adm .f input,.adm .f select{color:var(--fg)}
+@media (max-width:600px){.adm-head .rowx .btn{flex:1}.adm-bars .adm-bar .v{display:none}}
+.adm .f input,.adm .f select,.adm .f textarea{font-family:var(--body);font-weight:400;text-transform:none;letter-spacing:0}
+.adm .topbar{flex-wrap:wrap;row-gap:6px}
+.adm .topbar .nav{min-width:0;max-width:100%}
+@media (max-width:600px){.adm .topbar .nav{width:100%}.adm .topbar .brand{font-size:22px}}
+.adm.app{grid-template-columns:minmax(0,1fr);max-width:100vw;overflow-x:hidden}
+.adm .page{min-width:0}
