@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '../../lib/auth'
 import { supabase } from '../../lib/supabase'
 
-const ADMINS = ['igor.mkt.vs@gmail.com'] // espelha is_admin() no banco
+const ADMINS = ['igorantcaetano@gmail.com'] // espelha is_admin() no banco
 
 function Lista() {
   const { session, user } = useAuth()
