@@ -22,7 +22,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/painel/*" element={<Painel />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/*" element={<Admin />} />
             <Route path="/:slug" element={<Menu />} />
             <Route path="*" element={<Navigate to="/" />} />
           </>
