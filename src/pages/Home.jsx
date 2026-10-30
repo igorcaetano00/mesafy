@@ -8,7 +8,7 @@ const PRECO_MES = 149.9
 const PRECO_ANO = 1199
 const LINK_MENSAL = 'https://www.asaas.com/000/c/s2zixj3vfwpkoyf7'
 const LINK_ANUAL = 'https://www.asaas.com/000/c/cdkuyf36tv3frp5d'
-const WHATSAPP = '5527998816621' // Igor Caetano, criador do Mesafy
+const WHATSAPP = '5527998816621' // Igor Caetano, criador do Garçom Online
 const DEMO = '/jhonnys-garage'
 const IMG = 'https://xdmfgvvsawlfyqldbvjx.supabase.co/storage/v1/object/public/fotos/mesafy/'
 
@@ -50,7 +50,7 @@ function Calc() {
       </div>
       <div className="out">
         <div className="row bad"><span>Você paga de comissão</span><b>{brl(comissao, 0)}/mês</b></div>
-        <div className="row"><span>Mesafy</span><b>{brl(PRECO_MES)}/mês</b></div>
+        <div className="row"><span>Garçom Online</span><b>{brl(PRECO_MES)}/mês</b></div>
         <div className="row hi"><span>Fica no seu caixa</span><b>{economia > 0 ? brl(economia, 0) : brl(0, 0)}/mês</b></div>
         <div className="row"><span>Em um ano</span><b>{brl(Math.max(0, economia * 12), 0)}</b></div>
       </div>
@@ -62,7 +62,7 @@ export default function Home() {
   const [plano, setPlano] = useState('anual')
   const qr = useRef()
   useEffect(() => {
-    document.title = 'Mesafy | Cardápio digital com pedido no WhatsApp, sem comissão'
+    document.title = 'Garçom Online | Cardápio digital com pedido no WhatsApp, sem comissão'
     if (qr.current) QRCode.toCanvas(qr.current, window.location.origin + DEMO, { width: 150, margin: 1, color: { dark: '#141111', light: '#ffffff' } })
   }, [])
   const link = plano === 'anual' ? LINK_ANUAL : LINK_MENSAL
@@ -70,7 +70,7 @@ export default function Home() {
   return (
     <div className="lp">
       <header className="lp-nav"><div className="wrap">
-        <a className="lp-logo" href="#topo">Mesa<em>fy</em></a>
+        <a className="lp-logo" href="#topo" aria-label="Garçom Online">Garçom <em>Online</em></a>
         <nav>
           <a href="#como" className="hide">Como funciona</a>
           <a href="#conta" className="hide">Faça a conta</a>
@@ -117,7 +117,7 @@ export default function Home() {
 
       <section className="alt" id="conta"><div className="wrap">
         <div className="eyebrow">Faça a sua conta</div>
-        <h2>Quanto o Mesafy deixa <em>no seu caixa</em>?</h2>
+        <h2>Quanto o Garçom Online deixa <em>no seu caixa</em>?</h2>
         <p className="lead">Arraste e veja. A comissão vai embora, o valor fixo fica.</p>
         <Calc />
       </div></section>
@@ -201,9 +201,9 @@ export default function Home() {
 
       <section><div className="wrap">
         <div className="eyebrow">Comparativo</div>
-        <h2>Papel, aplicativo ou <em>Mesafy</em>?</h2>
+        <h2>Papel, aplicativo ou <em>Garçom Online</em>?</h2>
         <div className="tbl-wrap"><table>
-          <thead><tr><th></th><th>Papel + anotação</th><th>Marketplace</th><th className="me">Mesafy</th></tr></thead>
+          <thead><tr><th></th><th>Papel + anotação</th><th>Marketplace</th><th className="me">Garçom Online</th></tr></thead>
           <tbody>
             <tr><td>Custo em R$ 20 mil/mês de vendas</td><td>Reimpressão e erro de pedido</td><td>R$ 2.400 a R$ 5.400</td><td className="me">R$ 149,90</td></tr>
             <tr><td>Cliente precisa baixar app</td><td>Não</td><td>Sim</td><td className="me">Não</td></tr>
@@ -225,14 +225,14 @@ export default function Home() {
           <details><summary>Funciona para delivery?</summary><p>Hoje o foco é pedido na mesa e retirada no balcão. Delivery com taxa por bairro está em desenvolvimento e entra sem custo extra para quem já assina.</p></details>
           <details><summary>Tem taxa por pedido ou por mesa?</summary><p>Nenhuma. O valor é fixo, independente de quantos pedidos, mesas ou itens você tiver.</p></details>
           <details><summary>E se eu quiser cancelar?</summary><p>No mensal, cancela a qualquer momento e o cardápio fica no ar até o fim do período pago. No anual, você paga 10 meses e usa 12.</p></details>
-          <details><summary>Quem está por trás do Mesafy?</summary><p>Igor Caetano, profissional de marketing e negócios do Espírito Santo. O suporte é feito por ele, no WhatsApp, sem robô e sem fila.</p></details>
+          <details><summary>Quem está por trás do Garçom Online?</summary><p>Igor Caetano, profissional de marketing e negócios do Espírito Santo. O suporte é feito por ele, no WhatsApp, sem robô e sem fila.</p></details>
         </div>
         <div className="maker">
           <div className="av">IC</div>
           <div>
-            <div className="nm">Igor Caetano · criador do Mesafy</div>
-            <p>Criei o Mesafy depois de ver quanto um bar do interior perde em comissão e pedido errado. Qualquer dúvida, me chama direto. Respondo pessoalmente.</p>
-            <div style={{ marginTop: 10 }}><a className="btn ghost" href={zap('Olá Igor! Vi o site do Mesafy e quero saber mais para o meu estabelecimento.')} target="_blank" rel="noopener">Falar com o Igor no WhatsApp</a></div>
+            <div className="nm">Igor Caetano · criador do Garçom Online</div>
+            <p>Criei o Garçom Online depois de ver quanto um bar do interior perde em comissão e pedido errado. Qualquer dúvida, me chama direto. Respondo pessoalmente.</p>
+            <div style={{ marginTop: 10 }}><a className="btn ghost" href={zap('Olá Igor! Vi o site do Garçom Online e quero saber mais para o meu estabelecimento.')} target="_blank" rel="noopener">Falar com o Igor no WhatsApp</a></div>
           </div>
         </div>
       </div></section>
@@ -242,17 +242,17 @@ export default function Home() {
         <h2>Seu cardápio no ar <em>amanhã</em>.</h2>
         <p className="lead" style={{ marginInline: 'auto' }}>Assine, mande o cardápio atual pelo WhatsApp e receba o QR Code pronto para imprimir.</p>
         <div className="ctas">
-          <a className="btn big glow" href="#preco">Assinar o Mesafy</a>
-          <a className="btn big ghost" href={zap('Olá Igor! Quero tirar uma dúvida sobre o Mesafy.')} target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
+          <a className="btn big glow" href="#preco">Assinar o Garçom Online</a>
+          <a className="btn big ghost" href={zap('Olá Igor! Quero tirar uma dúvida sobre o Garçom Online.')} target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
         </div>
       </div></section>
 
       <footer className="lp-foot"><div className="wrap">
-        <span>Mesafy · Cardápio digital com pedido pelo WhatsApp</span>
+        <span>Garçom Online · garcononline.com.br</span>
         <span>Espírito Santo, Brasil · <Link to="/login">Área do cliente</Link></span>
       </div></footer>
 
-      <a className="lp-zap" href={zap('Olá Igor! Vi o site do Mesafy e quero saber mais.')} target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><ZapIcon />WhatsApp</a>
+      <a className="lp-zap" href={zap('Olá Igor! Vi o site do Garçom Online e quero saber mais.')} target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><ZapIcon />WhatsApp</a>
     </div>
   )
 }

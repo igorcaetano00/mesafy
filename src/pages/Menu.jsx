@@ -125,7 +125,7 @@ export default function Menu({ slug: slugProp }) {
           <a className="btn" href={'https://wa.me/' + soDigitos(r.whatsapp)} target="_blank" rel="noopener">Chamar no WhatsApp</a>
         </div>
         <small>{r.nome}{r.subtitulo ? ', ' + r.subtitulo : ''}. Preços em reais, sujeitos a alteração sem aviso.</small>
-        <div className="powered">Feito com Mesafy · cardápio digital com pedido pelo WhatsApp</div>
+        <div className="powered">Feito com Garçom Online · garcononline.com.br</div>
       </div></footer>
 
       {count > 0 && (
@@ -162,9 +162,10 @@ function Checkout({ r, cart, setQtd, total, onClose, onDone }) {
     const linhas = itens.map(c => ({ id: c.id, nome: c.nome, qtd: c.qtd, preco: c.preco, subtotal: +(c.qtd * c.preco).toFixed(2) }))
     const { data: numero, error } = await supabase.rpc('criar_pedido', { p: {
       restaurante_id: r.id, tipo: 'mesa', nome, celular: cel, mesa, itens: linhas, subtotal: total, taxa_entrega: 0, total, obs: f.obs.trim() || null,
-    } }); const ped = { numero }
+    } })
     setBusy(false)
-    if (error) { setMsg('Não consegui registrar o pedido. Tente de novo ou chame no WhatsApp.'); return }
+    if (error) { setMsg(error.message.includes('fechado') ? 'O restaurante está fechado agora.' : 'Não consegui registrar o pedido. Tente de novo ou chame no WhatsApp.'); return }
+    const ped = { numero }
     const txt = [`*PEDIDO #${ped.numero} - ${r.nome.toUpperCase()}*`, '', `*Nome:* ${nome}`, `*Mesa:* ${mesa}`, `*Celular:* ${f.celular}`, '', '*Itens:*',
       ...linhas.map(l => `${l.qtd}x ${l.nome} .... ${fmt(l.subtotal)}`), '', `*TOTAL: ${fmt(total)}*`]
     if (f.obs.trim()) txt.push('', `*Obs:* ${f.obs.trim()}`)
