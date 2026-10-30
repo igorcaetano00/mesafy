@@ -54,3 +54,5 @@ a.adm-st:hover{border-color:var(--muted)}
 @media (max-width:600px){.adm .topbar .nav{width:100%}.adm .topbar .brand{font-size:22px}}
 .adm.app{grid-template-columns:minmax(0,1fr);max-width:100vw;overflow-x:hidden}
 .adm .page{min-width:0}
+.adm-filtrolinha{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);gap:8px;max-width:900px}
+@media (max-width:700px){.adm-filtrolinha{grid-template-columns:1fr}}
