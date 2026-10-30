@@ -180,7 +180,7 @@ $$;
 
 -- admin da plataforma: e-mails listados aqui
 create or replace function is_admin() returns boolean language sql stable as $$
-  select coalesce((auth.jwt() ->> 'email') in ('igor.mkt.vs@gmail.com'), false);
+  select coalesce((auth.jwt() ->> 'email') in ('igorantcaetano@gmail.com'), false);
 $$;
 
 -- --- leitura pública do cardápio (anon) ---
@@ -271,3 +271,26 @@ returns table (nome text, qtd bigint, receita numeric) language sql stable as $$
   where p.restaurante_id = rid and p.criado_em >= desde and p.status <> 'cancelado'
   group by 1 order by 2 desc limit 20;
 $$;
+
+-- ---------- PEDIDO VIA FUNÇÃO (cliente anônimo não lê a tabela) ----------
+create or replace function set_numero_pedido() returns trigger language plpgsql security definer as $$
+begin
+  select coalesce(max(numero),0)+1 into new.numero from pedidos where restaurante_id = new.restaurante_id;
+  return new;
+end $$;
+
+create or replace function criar_pedido(p jsonb) returns int language plpgsql security definer as $$
+declare n int; r restaurantes%rowtype;
+begin
+  select * into r from restaurantes where id = (p->>'restaurante_id')::uuid;
+  if r.id is null then raise exception 'Restaurante não encontrado'; end if;
+  if r.status in ('suspenso','cancelado') then raise exception 'Restaurante indisponível'; end if;
+  if r.aberto = false then raise exception 'Restaurante fechado'; end if;
+  insert into pedidos (restaurante_id,tipo,nome,celular,mesa,endereco,bairro,itens,subtotal,taxa_entrega,total,obs)
+  values (r.id, coalesce(p->>'tipo','mesa'), p->>'nome', p->>'celular', p->>'mesa', p->>'endereco', p->>'bairro',
+          p->'itens', (p->>'subtotal')::numeric, coalesce((p->>'taxa_entrega')::numeric,0), (p->>'total')::numeric, p->>'obs')
+  returning numero into n;
+  return n;
+end $$;
+revoke all on function criar_pedido(jsonb) from public;
+grant execute on function criar_pedido(jsonb) to anon, authenticated;
