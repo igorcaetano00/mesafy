@@ -1,4 +1,4 @@
-/* Landing Mesafy. Prefixo lp- para não conflitar com painel/cardápio. */
+/* Landing Garçom Online. Prefixo lp- para não conflitar com painel/cardápio. */
 .lp{color:var(--fg);background:var(--bg);overflow-x:hidden}
 .lp .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .lp h1,.lp h2,.lp h3.big{font-family:var(--display);letter-spacing:.02em;line-height:.95;margin:0;text-wrap:balance}
