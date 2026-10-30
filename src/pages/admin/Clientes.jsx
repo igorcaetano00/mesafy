@@ -19,7 +19,7 @@ export default function Clientes() {
   ), [clientes, filtro, q])
 
   function exportar() {
-    csv(`garcononline-clientes-${hoje()}.csv`, lista.map(c => ({
+    csv(`foodporn-clientes-${hoje()}.csv`, lista.map(c => ({
       cliente: c.nome, cidade: c.cidade, uf: c.uf, status: STATUS[c.status]?.rotulo, plano: PLANOS[c.plano],
       valor: c.valor_mensal, mrr: c.mrr, vencimento: c.proximo_vencimento, contato: c.contato_nome,
       celular: c.contato_celular || c.whatsapp, email: c.contato_email || c.dono_email, origem: c.origem,

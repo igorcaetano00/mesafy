@@ -74,7 +74,7 @@ export default function Ficha() {
         </div>
         <div className="rowx">
           <a className="btn ghost" href={`/${c.slug}`} target="_blank" rel="noopener">Ver cardápio</a>
-          {celular && <a className="btn ghost" href={zap(celular, `Olá, ${(c.contato_nome || '').split(' ')[0] || 'tudo bem'}! Aqui é o Igor, do Garçom Online.`)} target="_blank" rel="noopener">WhatsApp</a>}
+          {celular && <a className="btn ghost" href={zap(celular, `Olá, ${(c.contato_nome || '').split(' ')[0] || 'tudo bem'}! Aqui é o Igor, da FOODPORN.`)} target="_blank" rel="noopener">WhatsApp</a>}
           {celular && c.plano !== 'piloto' && <a className="btn" href={zap(celular, msgCobranca(c))} target="_blank" rel="noopener">Enviar cobrança</a>}
         </div>
       </div>

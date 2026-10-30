@@ -42,7 +42,7 @@ function Shell() {
     <Ctx.Provider value={{ clientes, receita, recarregar, avisar }}>
       <div className="app adm">
         <header className="topbar">
-          <div className="brand">Garçom <em>Online</em> <span className="adm-tag">admin</span></div>
+          <div className="brand">FOOD<em>PORN</em> <span className="adm-tag">admin</span></div>
           <nav className="nav">
             <NavLink to="/admin" end>Visão geral</NavLink>
             <NavLink to="/admin/clientes">Clientes</NavLink>

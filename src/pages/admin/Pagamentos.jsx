@@ -26,7 +26,7 @@ export default function Pagamentos() {
   }, [pags])
 
   function exportar() {
-    csv(`garcononline-pagamentos-${mes}.csv`, (pags || []).map(p => ({
+    csv(`foodporn-pagamentos-${mes}.csv`, (pags || []).map(p => ({
       data: p.pago_em, cliente: p.restaurantes?.nome, valor: String(p.valor).replace('.', ','), forma: METODOS[p.metodo],
       status: p.status, referencia: p.referencia, periodo_desde: p.referente_a, obs: p.obs,
     })))
