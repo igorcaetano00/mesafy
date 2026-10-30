@@ -31,33 +31,6 @@ function Phone() {
   )
 }
 
-function Calc() {
-  const [fat, setFat] = useState(20000)
-  const [pct, setPct] = useState(20)
-  const comissao = fat * pct / 100
-  const economia = comissao - PRECO_MES
-  return (
-    <div className="calc">
-      <div style={{ display: 'grid', gap: 22 }}>
-        <label className="f">Quanto você vende por mês pelo aplicativo
-          <div className="val">{brl(fat, 0)}</div>
-          <input id="c-fat" type="range" min="3000" max="100000" step="1000" value={fat} onChange={e => setFat(+e.target.value)} />
-        </label>
-        <label className="f">Comissão que o aplicativo cobra
-          <div className="val">{pct}%</div>
-          <input id="c-pct" type="range" min="10" max="30" step="1" value={pct} onChange={e => setPct(+e.target.value)} />
-        </label>
-      </div>
-      <div className="out">
-        <div className="row bad"><span>Você paga de comissão</span><b>{brl(comissao, 0)}/mês</b></div>
-        <div className="row"><span>Garçom Online</span><b>{brl(PRECO_MES)}/mês</b></div>
-        <div className="row hi"><span>Fica no seu caixa</span><b>{economia > 0 ? brl(economia, 0) : brl(0, 0)}/mês</b></div>
-        <div className="row"><span>Em um ano</span><b>{brl(Math.max(0, economia * 12), 0)}</b></div>
-      </div>
-    </div>
-  )
-}
-
 export default function Home() {
   const [plano, setPlano] = useState('anual')
   const qr = useRef()
@@ -73,7 +46,6 @@ export default function Home() {
         <a className="lp-logo" href="#topo" aria-label="Garçom Online">Garçom <em>Online</em></a>
         <nav>
           <a href="#como" className="hide">Como funciona</a>
-          <a href="#conta" className="hide">Faça a conta</a>
           <a href="#preco">Preço</a>
           <Link to="/login" className="hide">Entrar</Link>
           <a className="btn" href="#preco">Assinar</a>
@@ -87,7 +59,7 @@ export default function Home() {
           <p className="lead">Cardápio digital no QR Code da mesa. O cliente escolhe no celular e o pedido cai no seu WhatsApp e na cozinha, na hora. Valor fixo por mês. Zero por pedido.</p>
           <div className="ctas">
             <a className="btn big glow" href="#preco">Quero no meu estabelecimento</a>
-            <a className="btn big ghost" href={DEMO} target="_blank" rel="noopener">Testar o cardápio de exemplo</a>
+            <a className="btn big ghost" href={DEMO} target="_blank" rel="noopener">Ver um cardápio em operação</a>
           </div>
           <div className="stats">
             <div className="stat"><b>0%</b><span>de comissão</span></div>
@@ -113,13 +85,6 @@ export default function Home() {
           <div className="card"><div className="v">0</div><h3>Contatos que ficam com você</h3><p>O cliente é do aplicativo, não seu. Você não tem o celular dele para avisar da promoção de quinta.</p></div>
           <div className="card"><div className="v">1 em 10</div><h3>Pedidos anotados errado</h3><p>Garçom anota, cozinha interpreta, cliente reclama. Prato refeito é custo que não aparece no caixa, mas sai do lucro.</p></div>
         </div>
-      </div></section>
-
-      <section className="alt" id="conta"><div className="wrap">
-        <div className="eyebrow">Faça a sua conta</div>
-        <h2>Quanto o Garçom Online deixa <em>no seu caixa</em>?</h2>
-        <p className="lead">Arraste e veja. A comissão vai embora, o valor fixo fica.</p>
-        <Calc />
       </div></section>
 
       <section id="como"><div className="wrap">
@@ -152,15 +117,15 @@ export default function Home() {
       </div></section>
 
       <section><div className="wrap">
-        <div className="eyebrow">Primeiro cliente</div>
+        <div className="eyebrow">Cliente piloto</div>
         <div className="case">
           <div>
-            <h2>Jhonny's Garage, <em>São Domingos do Norte</em></h2>
-            <blockquote>Lanchonete e petiscaria do interior do Espírito Santo, com cardápio de 110 itens no ar em um dia. Aponte a câmera e faça um pedido de teste agora.</blockquote>
-            <div className="who"><b>Cardápio de demonstração</b> · pedidos de teste são bem-vindos</div>
-            <div style={{ marginTop: 20 }}><a className="btn big" href={DEMO} target="_blank" rel="noopener">Abrir o cardápio</a></div>
+            <h2>Jhonny's Garage, <em>em operação</em>.</h2>
+            <p className="case-txt">Hamburgueria e petiscaria em São Domingos do Norte (ES). Os 110 itens do cardápio entraram no ar em um dia, com pedido pelo QR Code da mesa direto no WhatsApp da casa. Como cliente piloto, o Jhonny's usa o Garçom Online no dia a dia e ajuda a definir as próximas melhorias.</p>
+            <div className="who"><b>Cardápio real</b> · navegue à vontade. Pedidos enviados chegam de verdade na cozinha do Jhonny's.</div>
+            <div style={{ marginTop: 20 }}><a className="btn big" href={DEMO} target="_blank" rel="noopener">Ver o cardápio do Jhonny's</a></div>
           </div>
-          <div className="qr"><canvas ref={qr} /><small>Aponte a câmera</small></div>
+          <div className="qr"><canvas ref={qr} /><small>Aponte a câmera e veja como o cliente vê</small></div>
         </div>
       </div></section>
 
