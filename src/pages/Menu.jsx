@@ -160,9 +160,9 @@ function Checkout({ r, cart, setQtd, total, onClose, onDone }) {
     setBusy(true)
     ls.set('cliente', { nome, celular: f.celular })
     const linhas = itens.map(c => ({ id: c.id, nome: c.nome, qtd: c.qtd, preco: c.preco, subtotal: +(c.qtd * c.preco).toFixed(2) }))
-    const { data: ped, error } = await supabase.from('pedidos').insert({
+    const { data: numero, error } = await supabase.rpc('criar_pedido', { p: {
       restaurante_id: r.id, tipo: 'mesa', nome, celular: cel, mesa, itens: linhas, subtotal: total, taxa_entrega: 0, total, obs: f.obs.trim() || null,
-    }).select('numero').single()
+    } }); const ped = { numero }
     setBusy(false)
     if (error) { setMsg('Não consegui registrar o pedido. Tente de novo ou chame no WhatsApp.'); return }
     const txt = [`*PEDIDO #${ped.numero} - ${r.nome.toUpperCase()}*`, '', `*Nome:* ${nome}`, `*Mesa:* ${mesa}`, `*Celular:* ${f.celular}`, '', '*Itens:*',
