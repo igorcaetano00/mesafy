@@ -1,5 +1,5 @@
 -- =====================================================================
--- MESAFY | Painel administrativo da plataforma
+-- GARÇOM ONLINE | Painel administrativo da plataforma
 -- Rodar depois do schema.sql. Idempotente.
 -- =====================================================================
 
