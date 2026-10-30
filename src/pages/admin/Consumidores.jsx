@@ -75,7 +75,7 @@ export default function Consumidores() {
   }, [lista, rest])
 
   function exportar() {
-    csv(`mesafy-consumidores-${hoje()}.csv`, filtrada.map(c => ({
+    csv(`garcononline-consumidores-${hoje()}.csv`, filtrada.map(c => ({
       nome: c.nome, celular: c.celular, whatsapp: wa(c.celular), restaurante: nomeRest[c.restaurante_id],
       pedidos: c.total_pedidos, total_gasto: String(c.total_gasto).replace('.', ','),
       ticket_medio: (c.total_gasto / Math.max(1, c.total_pedidos)).toFixed(2).replace('.', ','),
@@ -89,7 +89,7 @@ export default function Consumidores() {
   return (
     <div className="page">
       <div className="rowx" style={{ justifyContent: 'space-between' }}>
-        <div><h1>Consumidores</h1><p className="sub">Todas as pessoas que já fizeram pedido pelo Mesafy, em todos os restaurantes.</p></div>
+        <div><h1>Consumidores</h1><p className="sub">Todas as pessoas que já fizeram pedido pelo Garçom Online, em todos os restaurantes.</p></div>
         <button className="btn" onClick={exportar} disabled={!filtrada.length}>Exportar {filtrada.length || ''} em CSV</button>
       </div>
 
@@ -150,7 +150,7 @@ export default function Consumidores() {
         </div>
       )}
       <p className="muted small" style={{ marginTop: 16 }}>
-        Os dados são do restaurante onde o pedido foi feito. Use para suporte e relatórios do cliente. Para campanhas do próprio Mesafy, é preciso consentimento do consumidor (LGPD).
+        Os dados são do restaurante onde o pedido foi feito. Use para suporte e relatórios do cliente. Para campanhas do próprio Garçom Online, é preciso consentimento do consumidor (LGPD).
       </p>
     </div>
   )

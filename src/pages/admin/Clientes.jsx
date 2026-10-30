@@ -19,7 +19,7 @@ export default function Clientes() {
   ), [clientes, filtro, q])
 
   function exportar() {
-    csv(`mesafy-clientes-${hoje()}.csv`, lista.map(c => ({
+    csv(`garcononline-clientes-${hoje()}.csv`, lista.map(c => ({
       cliente: c.nome, cidade: c.cidade, uf: c.uf, status: STATUS[c.status]?.rotulo, plano: PLANOS[c.plano],
       valor: c.valor_mensal, mrr: c.mrr, vencimento: c.proximo_vencimento, contato: c.contato_nome,
       celular: c.contato_celular || c.whatsapp, email: c.contato_email || c.dono_email, origem: c.origem,
@@ -111,7 +111,7 @@ function NovoCliente({ fechar, ok }) {
         <h2>Novo cliente</h2>
         <div className="grid g2">
           <label className="f">Nome do estabelecimento<input value={f.nome} onChange={e => up('nome', e.target.value)} required autoFocus /></label>
-          <label className="f">Endereço do cardápio<input value={f.slug} onChange={e => { setSlugTocado(true); up('slug', e.target.value) }} required /><small className="muted">mesafy-app.netlify.app/{slugify(f.slug) || '...'}</small></label>
+          <label className="f">Endereço do cardápio<input value={f.slug} onChange={e => { setSlugTocado(true); up('slug', e.target.value) }} required /><small className="muted">{window.location.host}/{slugify(f.slug) || '...'}</small></label>
           <label className="f">WhatsApp que recebe pedidos<input value={f.whatsapp} onChange={e => up('whatsapp', e.target.value)} inputMode="tel" placeholder="27 99999-9999" required /></label>
           <div className="grid" style={{ gridTemplateColumns: '1fr 70px' }}>
             <label className="f">Cidade<input value={f.cidade} onChange={e => up('cidade', e.target.value)} /></label>
