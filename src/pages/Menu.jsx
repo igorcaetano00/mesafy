@@ -125,7 +125,7 @@ export default function Menu({ slug: slugProp }) {
           <a className="btn" href={'https://wa.me/' + soDigitos(r.whatsapp)} target="_blank" rel="noopener">Chamar no WhatsApp</a>
         </div>
         <small>{r.nome}{r.subtitulo ? ', ' + r.subtitulo : ''}. Preços em reais, sujeitos a alteração sem aviso.</small>
-        <div className="powered">Feito com Garçom Online · garcononline.com.br</div>
+        <div className="powered"><a href="https://foodporn.com.br" target="_blank" rel="noopener">Cardápio digital por FOODPORN</a></div>
       </div></footer>
 
       {count > 0 && (
