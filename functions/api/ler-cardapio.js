@@ -65,32 +65,37 @@ export async function onRequestPost({ request, env }) {
     return json(400, { erro: 'Nenhum arquivo enviado.' })
   }
 
-  // 3) chama o Gemini
+  // 3) chama o Gemini (com uma segunda tentativa mais simples se a primeira for recusada)
   const modelo = env.GEMINI_MODEL || 'gemini-3.8-flash'
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
+  const chamar = (generationConfig) => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify({
-      contents: [{ role: 'user', parts }],
-      generationConfig: {
-        temperature: 0.1, responseMimeType: 'application/json', responseSchema: SCHEMA,
-        // leitura de cardápio não precisa de raciocínio longo; deixa a resposta rápida
-        thinkingConfig: { thinkingLevel: env.GEMINI_THINKING || 'low' },
-      },
-    }),
+    body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig }),
   })
+  let r = await chamar({
+    temperature: 0.1, responseMimeType: 'application/json', responseSchema: SCHEMA,
+    thinkingConfig: { thinkingLevel: env.GEMINI_THINKING || 'low' },
+  })
+  if (r.status === 400) {
+    console.error('gemini tentativa 1', 400, (await r.text()).slice(0, 400))
+    parts[0] = { text: PROMPT + '\nResponda somente com JSON no formato {"categorias":[{"nome":"","subtitulo":"","itens":[{"nome":"","descricao":"","preco":0}]}]}.' }
+    r = await chamar({ temperature: 0.1, responseMimeType: 'application/json' })
+  }
   if (!r.ok) {
-    console.error('gemini', r.status, (await r.text()).slice(0, 400))
-    return json(502, { erro: 'A leitura automática falhou. Tente de novo ou envie uma foto mais nítida.' })
+    const corpo = await r.text()
+    console.error('gemini', r.status, corpo.slice(0, 400))
+    let msg = ''
+    try { msg = JSON.parse(corpo)?.error?.message || '' } catch { msg = corpo.slice(0, 120) }
+    return json(502, { erro: 'A leitura automática falhou. Tente de novo ou envie uma foto mais nítida.', detalhe: `Gemini ${r.status}${msg ? ': ' + msg.slice(0, 200) : ''}` })
   }
   const out = await r.json()
-  const txt = out?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || ''
+  const txt = (out?.candidates?.[0]?.content?.parts || []).filter(p => !p.thought).map(p => p.text || '').join('').replace(/^```(json)?|```$/g, '').trim()
   try {
     const cardapio = JSON.parse(txt)
     if (!cardapio.categorias?.length) return json(422, { erro: 'Não encontrei itens neste arquivo.' })
     return json(200, cardapio)
   } catch {
-    return json(502, { erro: 'Resposta inesperada da leitura. Tente de novo.' })
+    return json(502, { erro: 'Resposta inesperada da leitura. Tente de novo.', detalhe: txt.slice(0, 120) })
   }
 }
 
