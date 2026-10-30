@@ -33,10 +33,20 @@ export default function Importar() {
       if (file.size > MAX) return setErro('Arquivo maior que 4 MB. Envie uma foto menor ou um PDF mais leve.')
       setFase('lendo')
       const { data: { session } } = await supabase.auth.getSession()
-      const r = await fetch('/.netlify/functions/ler-cardapio', {
+      let corpo
+      if (/\.docx$/i.test(file.name)) {
+        // Word: extrai o texto aqui no navegador e manda só o texto
+        const mammoth = (await import('mammoth/mammoth.browser.js')).default
+        const { value } = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() })
+        if (!value.trim()) throw new Error('Não encontrei texto nesse arquivo do Word.')
+        corpo = { nome: file.name, texto: value }
+      } else {
+        corpo = { nome: file.name, tipo: file.type, dados: await paraBase64(file) }
+      }
+      const r = await fetch('/api/ler-cardapio', {
         method: 'POST',
         headers: { 'content-type': 'application/json', authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({ nome: file.name, tipo: file.type, dados: await paraBase64(file) }),
+        body: JSON.stringify(corpo),
       })
       const j = await r.json().catch(() => ({}))
       if (!r.ok) throw new Error(j.erro || 'Falha na leitura.')
