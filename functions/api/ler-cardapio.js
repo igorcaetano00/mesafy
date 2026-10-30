@@ -66,13 +66,17 @@ export async function onRequestPost({ request, env }) {
   }
 
   // 3) chama o Gemini
-  const modelo = env.GEMINI_MODEL || 'gemini-2.5-flash'
+  const modelo = env.GEMINI_MODEL || 'gemini-3.8-flash'
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
     body: JSON.stringify({
       contents: [{ role: 'user', parts }],
-      generationConfig: { temperature: 0.1, responseMimeType: 'application/json', responseSchema: SCHEMA },
+      generationConfig: {
+        temperature: 0.1, responseMimeType: 'application/json', responseSchema: SCHEMA,
+        // leitura de cardápio não precisa de raciocínio longo; deixa a resposta rápida
+        thinkingConfig: { thinkingLevel: env.GEMINI_THINKING || 'low' },
+      },
     }),
   })
   if (!r.ok) {
