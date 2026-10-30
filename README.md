@@ -1,37 +1,42 @@
-# Mesafy
+# Garçom Online
 
-Cardápio digital com pedido pelo WhatsApp, painel do restaurante e painel admin.
-Stack: React (Vite) no Netlify + Supabase (banco, login, tempo real, fotos). Custo zero no início.
+Cardápio digital no QR Code com pedido pelo WhatsApp, painel do restaurante e painel admin da plataforma.
+Domínio: **garcononline.com.br**
 
-## Subir em 20 minutos
+Stack: React (Vite) no **Cloudflare Pages** + Pages Functions (`functions/`) + Supabase (banco, login, tempo real, fotos) + Gemini (leitura de cardápio).
 
-### 1. Supabase (banco)
-1. Crie conta em supabase.com e um projeto (região: South America, São Paulo).
-2. Menu **SQL Editor** > New query > cole `supabase/schema.sql` inteiro > Run.
-3. Nova query > cole `supabase/seed_jhonnys.sql` > Run. (Cria o Jhonny's com o cardápio completo.)
-4. Menu **Authentication > Providers > Email**: desligue "Confirm email" por enquanto (facilita o piloto).
-5. Menu **Project Settings > API**: copie `Project URL` e `anon public key`.
-6. No `schema.sql`, a função `is_admin()` lista o e-mail do administrador. Troque se precisar e rode de novo só aquele bloco.
+## Hospedagem (Cloudflare Pages)
+- Projeto conectado a este repositório no GitHub. Cada envio na `main` publica sozinho.
+- Build: `npm run build` · Pasta de saída: `dist`
+- Rotas do React: o Pages serve o `index.html` para qualquer rota (não há `404.html`), então `/admin`, `/painel` e `/:slug` funcionam.
+- Função de servidor: `functions/api/ler-cardapio.js` responde em `POST /api/ler-cardapio`.
 
-### 2. Netlify (site)
-1. Suba esta pasta num repositório no GitHub (sem a pasta `node_modules` e sem `.env`).
-2. Em app.netlify.com > Add new site > Import from Git > escolha o repositório. Build command e publish já vêm do `netlify.toml`.
-3. **Site settings > Environment variables**, adicione:
-   - `VITE_SUPABASE_URL` = Project URL
-   - `VITE_SUPABASE_ANON_KEY` = anon key
-   - `VITE_DOMINIO` = o domínio do site (ex.: `mesafy.netlify.app`, sem https)
-4. Deploy. O site abre em `https://SEU-SITE.netlify.app`.
+### Variáveis de ambiente (Settings > Variables and Secrets, em Production)
+| Nome | Tipo | Uso |
+|---|---|---|
+| `VITE_SUPABASE_URL` | Texto | URL do projeto Supabase (build e função) |
+| `VITE_SUPABASE_ANON_KEY` | Texto | Chave pública do Supabase (build e função) |
+| `GEMINI_API_KEY` | **Secret** | Leitura de cardápio por IA |
+| `GEMINI_MODEL` | Texto, opcional | Troca o modelo sem mexer no código |
 
-### 3. Primeiro acesso
-- Cardápio do Jhonny's: `https://SEU-SITE.netlify.app/jhonnys-garage`
-- Painel: `https://SEU-SITE.netlify.app/login` > "Ainda não tenho conta" > crie o usuário do dono.
-- Vincule o dono ao restaurante (SQL Editor):
-  ```sql
-  update restaurantes set owner_id = (select id from auth.users where email = 'EMAIL_DO_DONO') where slug = 'jhonnys-garage';
-  ```
-- Admin da plataforma: `https://SEU-SITE.netlify.app/admin` (precisa logar com o e-mail listado em `is_admin()`).
+Depois de mudar uma variável, rode um novo deploy (Deployments > Retry deployment).
 
-Qualquer novo restaurante que criar conta em `/login` cai no onboarding e cria o próprio cardápio sozinho.
+### Domínio próprio
+1. Em Cloudflare: Add a domain > `garcononline.com.br` (plano Free).
+2. No registro.br, troque os servidores DNS pelos dois que o Cloudflare indicar.
+3. No projeto Pages: Custom domains > adicione `garcononline.com.br` e `www.garcononline.com.br`.
+4. No Supabase: Authentication > URL Configuration > Site URL `https://garcononline.com.br` e Redirect URLs `https://garcononline.com.br/**`.
+
+## Supabase
+1. SQL Editor: rode `supabase/schema.sql`, depois `supabase/admin.sql`. `supabase/seed_jhonnys.sql` cria o restaurante piloto.
+2. `is_admin()` (em `schema.sql`) define o e-mail do administrador da plataforma. Ele precisa bater com `ADMINS` em `src/pages/admin/Admin.jsx`.
+3. Authentication > URL Configuration: Site URL e Redirect URLs com o endereço público do site.
+
+## Acessos
+- Cardápio: `/{slug}` (ex.: `/jhonnys-garage`)
+- Painel do restaurante: `/login` > `/painel`
+- Admin da plataforma: `/admin` (visão geral, clientes, ficha, pagamentos, consumidores)
+- O dono cria a conta em `/login`; o admin vincula pelo e-mail na ficha do cliente.
 
 ## Rodar local
 ```
@@ -42,19 +47,18 @@ npm run dev
 
 ## Estrutura
 ```
-supabase/schema.sql        tabelas, segurança (RLS), tempo real, storage, relatórios
-supabase/seed_jhonnys.sql  restaurante piloto
+supabase/schema.sql        tabelas, segurança (RLS), tempo real, storage, relatórios, criar_pedido
+supabase/admin.sql         pagamentos, notas, funções do admin (métricas, vincular dono, registrar pagamento)
+functions/api/             funções de servidor do Cloudflare Pages (leitura de cardápio por IA)
+src/pages/Home.jsx         landing de vendas
 src/pages/Menu.jsx         cardápio público + carrinho + pedido (grava no banco e abre WhatsApp)
-src/pages/painel/          Resumo, Pedidos (tempo real), Cardápio (CRUD), QR Code, Configurações, Onboarding
-src/pages/admin/           lista de restaurantes, ativar/suspender
-src/lib/supabase.js        cliente, helpers, resolução de subdomínio
-netlify/functions/         (Dia 3) webhook Asaas, extração de cardápio por IA
+src/pages/painel/          painel do restaurante (pedidos em tempo real, cardápio, importar, QR, configurações)
+src/pages/admin/           painel admin da plataforma
+src/lib/comercial.js       preços, links de pagamento, regras de cobrança
 ```
 
-## Subdomínio por restaurante (depois)
-Com domínio próprio: em Netlify > Domain management adicione `*.seudominio.com` (wildcard) e no DNS um CNAME `*` apontando para o site. O código já resolve `jhonnys.seudominio.com` para o slug `jhonnys`.
-
 ## Roadmap
-- Dia 2: upload de cardápio (PDF/Word/JPG) com extração por IA; despesas; clientes
-- Dia 3: landing de vendas, checkout Asaas (mensal/anual), webhook de pagamento, bloqueio por inadimplência
-- Depois: delivery com taxa por bairro, imagens de IA pelo painel, domínio próprio automatizado
+- Webhook do Asaas (pagamento entra sozinho e atualiza o status)
+- Despesas e relatórios do restaurante
+- Delivery com taxa por bairro
+- Subdomínio por restaurante (`bar.garcononline.com.br`), já suportado no código
