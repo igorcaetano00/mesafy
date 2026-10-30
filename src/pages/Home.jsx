@@ -8,11 +8,14 @@ const PRECO_MES = 149.9
 const PRECO_ANO = 1199
 const LINK_MENSAL = 'https://www.asaas.com/000/c/s2zixj3vfwpkoyf7'
 const LINK_ANUAL = 'https://www.asaas.com/000/c/cdkuyf36tv3frp5d'
-const WHATSAPP_MESAFY = '5527997679086' // TODO: trocar pelo número comercial do Mesafy
+const WHATSAPP = '5527998816621' // Igor Caetano, criador do Mesafy
 const DEMO = '/jhonnys-garage'
+const IMG = 'https://xdmfgvvsawlfyqldbvjx.supabase.co/storage/v1/object/public/fotos/mesafy/'
 
-const fmt = (v) => 'R$ ' + v.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-const zap = (msg) => `https://wa.me/${WHATSAPP_MESAFY}?text=${encodeURIComponent(msg)}`
+const brl = (v, dec = 2) => 'R$ ' + v.toFixed(dec).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+const zap = (msg) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`
+
+const ZapIcon = () => <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.1.6 2.8.5a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.5-.3z" /></svg>
 
 function Phone() {
   return (
@@ -28,11 +31,38 @@ function Phone() {
   )
 }
 
+function Calc() {
+  const [fat, setFat] = useState(20000)
+  const [pct, setPct] = useState(20)
+  const comissao = fat * pct / 100
+  const economia = comissao - PRECO_MES
+  return (
+    <div className="calc">
+      <div style={{ display: 'grid', gap: 22 }}>
+        <label className="f">Quanto você vende por mês pelo aplicativo
+          <div className="val">{brl(fat, 0)}</div>
+          <input id="c-fat" type="range" min="3000" max="100000" step="1000" value={fat} onChange={e => setFat(+e.target.value)} />
+        </label>
+        <label className="f">Comissão que o aplicativo cobra
+          <div className="val">{pct}%</div>
+          <input id="c-pct" type="range" min="10" max="30" step="1" value={pct} onChange={e => setPct(+e.target.value)} />
+        </label>
+      </div>
+      <div className="out">
+        <div className="row bad"><span>Você paga de comissão</span><b>{brl(comissao, 0)}/mês</b></div>
+        <div className="row"><span>Mesafy</span><b>{brl(PRECO_MES)}/mês</b></div>
+        <div className="row hi"><span>Fica no seu caixa</span><b>{economia > 0 ? brl(economia, 0) : brl(0, 0)}/mês</b></div>
+        <div className="row"><span>Em um ano</span><b>{brl(Math.max(0, economia * 12), 0)}</b></div>
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
   const [plano, setPlano] = useState('anual')
   const qr = useRef()
   useEffect(() => {
-    document.title = 'Mesafy | Cardápio digital com pedido no WhatsApp'
+    document.title = 'Mesafy | Cardápio digital com pedido no WhatsApp, sem comissão'
     if (qr.current) QRCode.toCanvas(qr.current, window.location.origin + DEMO, { width: 150, margin: 1, color: { dark: '#141111', light: '#ffffff' } })
   }, [])
   const link = plano === 'anual' ? LINK_ANUAL : LINK_MENSAL
@@ -43,109 +73,135 @@ export default function Home() {
         <a className="lp-logo" href="#topo">Mesa<em>fy</em></a>
         <nav>
           <a href="#como" className="hide">Como funciona</a>
-          <a href="#recursos" className="hide">Recursos</a>
+          <a href="#conta" className="hide">Faça a conta</a>
           <a href="#preco">Preço</a>
-          <Link to="/login">Entrar</Link>
-          <a className="btn" href={DEMO} target="_blank" rel="noopener">Ver demo</a>
+          <Link to="/login" className="hide">Entrar</Link>
+          <a className="btn" href="#preco">Assinar</a>
         </nav>
       </div></header>
 
-      <section className="lp-hero" id="topo"><div className="wrap">
+      <section className="lp-hero" id="topo"><div className="bg" /><div className="wrap">
         <div>
           <div className="eyebrow">Para bares, lanchonetes e restaurantes</div>
-          <h1>Cardápio no QR Code. Pedido direto no <em>WhatsApp</em>. Sem comissão.</h1>
-          <p className="lead">O cliente aponta a câmera, escolhe e envia o pedido. Ele cai no seu WhatsApp e no painel da cozinha ao mesmo tempo. Você paga um valor fixo por mês, não uma porcentagem de cada venda.</p>
+          <h1>Pare de pagar <em>comissão</em> em cada pedido.</h1>
+          <p className="lead">Cardápio digital no QR Code da mesa. O cliente escolhe no celular e o pedido cai no seu WhatsApp e na cozinha, na hora. Valor fixo por mês. Zero por pedido.</p>
           <div className="ctas">
-            <a className="btn big" href="#preco">Quero no meu estabelecimento</a>
-            <a className="btn big ghost" href={DEMO} target="_blank" rel="noopener">Ver cardápio de exemplo</a>
+            <a className="btn big glow" href="#preco">Quero no meu estabelecimento</a>
+            <a className="btn big ghost" href={DEMO} target="_blank" rel="noopener">Testar o cardápio de exemplo</a>
           </div>
-          <div className="proof"><span><b>0%</b> de comissão</span><span><b>Sem</b> app para baixar</span><span><b>Pronto</b> em 1 dia</span></div>
+          <div className="stats">
+            <div className="stat"><b>0%</b><span>de comissão</span></div>
+            <div className="stat"><b>1 dia</b><span>para estar no ar</span></div>
+            <div className="stat"><b>R$ 0</b><span>por pedido</span></div>
+          </div>
         </div>
         <Phone />
       </div></section>
 
-      <section className="pain"><div className="wrap">
-        <div className="eyebrow">O problema</div>
-        <h2>Você já paga caro por pedido. <em>Só não vê</em>.</h2>
-        <div className="cards">
-          <div className="card"><h3>Comissão de marketplace</h3><p>De 12% a 27% em cada pedido. Num mês de R$ 20 mil, são até R$ 5.400 que saem do seu caixa para o aplicativo.</p></div>
-          <div className="card"><h3>Pedido anotado errado</h3><p>Garçom anota, cozinha interpreta, cliente reclama. Cada erro é prato refeito, tempo perdido e cliente que não volta.</p></div>
-          <div className="card"><h3>Cardápio de papel desatualizado</h3><p>Mudou o preço, acabou o item, lançou o prato novo. Reimprimir custa caro e o cliente descobre na hora de pagar.</p></div>
+      <div className="lp-proof"><div className="wrap">
+        <span>Em operação em <b>São Domingos do Norte, ES</b></span>
+        <span>Funciona com o <b>WhatsApp que você já usa</b></span>
+        <span>Cliente <b>não instala nada</b></span>
+        <span>Pix, boleto ou cartão</span>
+      </div></div>
+
+      <section><div className="wrap">
+        <div className="eyebrow">A conta que ninguém faz</div>
+        <h2>Todo pedido pelo aplicativo sai <em>mais caro</em> do que parece.</h2>
+        <div className="pain">
+          <div className="card"><div className="v">12% a 27%</div><h3>De comissão por pedido</h3><p>Em R$ 20 mil de vendas no mês, são R$ 2.400 a R$ 5.400 que saem do seu caixa direto para o aplicativo.</p></div>
+          <div className="card"><div className="v">0</div><h3>Contatos que ficam com você</h3><p>O cliente é do aplicativo, não seu. Você não tem o celular dele para avisar da promoção de quinta.</p></div>
+          <div className="card"><div className="v">1 em 10</div><h3>Pedidos anotados errado</h3><p>Garçom anota, cozinha interpreta, cliente reclama. Prato refeito é custo que não aparece no caixa, mas sai do lucro.</p></div>
         </div>
       </div></section>
 
-      <section className="alt" id="como"><div className="wrap">
+      <section className="alt" id="conta"><div className="wrap">
+        <div className="eyebrow">Faça a sua conta</div>
+        <h2>Quanto o Mesafy deixa <em>no seu caixa</em>?</h2>
+        <p className="lead">Arraste e veja. A comissão vai embora, o valor fixo fica.</p>
+        <Calc />
+      </div></section>
+
+      <section id="como"><div className="wrap">
         <div className="eyebrow">Como funciona</div>
-        <h2>Três passos. <em>Nenhuma tecnologia</em> para o cliente aprender.</h2>
-        <div className="cards">
-          <div className="card"><div className="n">1</div><h3>QR Code na mesa</h3><p>Você imprime o QR que o painel gera. Cola na mesa, no balcão ou no cardápio físico.</p></div>
-          <div className="card"><div className="n">2</div><h3>Cliente escolhe e envia</h3><p>Abre o cardápio no navegador, com foto e preço. Informa nome e mesa. Toca em enviar e o WhatsApp abre com o pedido pronto.</p></div>
-          <div className="card"><div className="n">3</div><h3>Pedido na cozinha</h3><p>Chega no seu WhatsApp e no painel de pedidos ao mesmo tempo, com som. Aceitar, preparar, pronto, entregue.</p></div>
-        </div>
-      </div></section>
-
-      <section id="recursos"><div className="wrap">
-        <div className="eyebrow">O que está incluso</div>
-        <h2>Tudo que um estabelecimento <em>precisa</em>. Nada que não precisa.</h2>
-        <div className="cards six">
-          {[
-            ['Cardápio digital com a sua cara', 'Cor, foto de capa e fotos dos pratos. Fica com a identidade do seu negócio, não com a de um aplicativo.'],
-            ['Pedido pelo WhatsApp', 'Nome, mesa, celular e itens chegam formatados. Sem precisar de API paga ou número especial.'],
-            ['Painel de pedidos em tempo real', 'Tela para o balcão ou a cozinha, com som a cada pedido novo. Funciona em tablet, celular ou computador.'],
-            ['Edição na hora', 'Mudou o preço ou acabou o item? Altera no painel e o cliente já vê. Marque "esgotado" com um toque.'],
-            ['Fotos geradas por IA', 'Não tem foto profissional? A gente gera imagens dos seus pratos para o cardápio ficar vendedor.'],
-            ['Relatórios e clientes', 'Mais vendidos, faturamento por dia, ticket médio e lista automática de clientes com celular.'],
-          ].map(([t, d]) => (
-            <div className="card" key={t}><div className="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l5 5L20 7" /></svg></div><h3>{t}</h3><p>{d}</p></div>
-          ))}
-        </div>
-      </div></section>
-
-      <section className="alt lp-demo"><div className="wrap">
-        <div>
-          <div className="eyebrow">Veja funcionando</div>
-          <h2>Jhonny's Garage, <em>São Domingos do Norte</em></h2>
-          <p className="lead">Lanchonete e petiscaria do interior do Espírito Santo, primeiro cliente do Mesafy. Aponte a câmera ou toque no botão e faça um pedido de teste.</p>
-          <div className="ctas" style={{ marginTop: 18 }}><a className="btn big" href={DEMO} target="_blank" rel="noopener">Abrir cardápio de exemplo</a></div>
-        </div>
-        <div className="qr"><canvas ref={qr} /><small>Aponte a câmera</small></div>
-      </div></section>
-
-      <section className="lp-price" id="preco"><div className="wrap">
-        <div style={{ textAlign: 'center' }}>
-          <div className="eyebrow">Preço único</div>
-          <h2>Um plano. <em>Tudo incluso</em>. Cancele quando quiser.</h2>
-          <p className="lead" style={{ margin: '12px auto 0' }}>Menos do que você paga de comissão em dois ou três pedidos por dia.</p>
-        </div>
-        <div className="box">
-          <div className="plans">
-            <button type="button" className={'plan' + (plano === 'mensal' ? ' on' : '')} onClick={() => setPlano('mensal')}>
-              <div className="l">Mensal</div><div className="v">{fmt(PRECO_MES)}<small> /mês</small></div>
-            </button>
-            <button type="button" className={'plan' + (plano === 'anual' ? ' on' : '')} onClick={() => setPlano('anual')}>
-              <div className="l">Anual</div><div className="v">{fmt(PRECO_ANO)}<small> /ano</small></div><span className="tag">2 meses grátis + domínio próprio</span>
-            </button>
-          </div>
+        <h2>Três passos. <em>Nada</em> para o cliente aprender.</h2>
+        <div className="split" style={{ marginTop: 28 }}>
+          <img src={IMG + 'lp-celular.jpg'} alt="Cliente escolhendo no cardápio digital pelo celular" loading="lazy" />
           <ul>
-            <li>Cardápio digital + QR Code</li>
-            <li>Pedido pelo WhatsApp</li>
-            <li>Painel de pedidos em tempo real (cozinha e balcão)</li>
-            <li>Painel para editar itens, preços e fotos</li>
-            <li>Fotos dos pratos geradas por IA</li>
-            <li>Relatório de mais vendidos e clientes</li>
-            <li>Montagem do cardápio inclusa: manda foto do cardápio atual e a gente sobe</li>
-            <li>Suporte pelo WhatsApp</li>
+            <li><span className="dot">1</span><div><b>QR Code na mesa</b><span>Você imprime o QR que o painel gera. Cola na mesa, no balcão, no cardápio físico.</span></div></li>
+            <li><span className="dot">2</span><div><b>Cliente escolhe e envia</b><span>Abre no navegador, com foto e preço. Informa nome e mesa, toca em enviar. O WhatsApp abre com o pedido pronto.</span></div></li>
+            <li><span className="dot">3</span><div><b>Pedido na cozinha</b><span>Chega no seu WhatsApp e no painel ao mesmo tempo, com som. Aceitar, preparar, pronto, entregue.</span></div></li>
           </ul>
-          <a className="btn big" href={link} target="_blank" rel="noopener" style={{ width: '100%' }}>
-            {plano === 'anual' ? `Assinar anual por ${fmt(PRECO_ANO)}` : `Assinar mensal por ${fmt(PRECO_MES)}`}
-          </a>
-          <p className="fine">Pix, boleto ou cartão. Sem fidelidade no mensal. Depois do pagamento você recebe o acesso ao painel no mesmo dia.</p>
         </div>
       </div></section>
 
       <section className="alt"><div className="wrap">
+        <div className="split rev">
+          <img src={IMG + 'lp-dono.jpg'} alt="Dono de bar com o painel de pedidos no tablet" loading="lazy" />
+          <div>
+            <div className="eyebrow">Painel do dono</div>
+            <h2>Você vê tudo. <em>Sem depender</em> de ninguém.</h2>
+            <ul>
+              <li><span className="dot">✓</span><div><b>Pedidos em tempo real</b><span>Tela para o balcão ou a cozinha. Toca um som a cada pedido novo.</span></div></li>
+              <li><span className="dot">✓</span><div><b>Mudou o preço? Muda na hora</b><span>Acabou o item? Marca "esgotado" com um toque e some do cardápio.</span></div></li>
+              <li><span className="dot">✓</span><div><b>Mais vendidos e clientes</b><span>Faturamento por dia, ticket médio e a lista de quem pediu, com celular.</span></div></li>
+              <li><span className="dot">✓</span><div><b>Fotos geradas por IA</b><span>Não tem foto profissional? A gente gera imagens dos seus pratos.</span></div></li>
+            </ul>
+          </div>
+        </div>
+      </div></section>
+
+      <section><div className="wrap">
+        <div className="eyebrow">Primeiro cliente</div>
+        <div className="case">
+          <div>
+            <h2>Jhonny's Garage, <em>São Domingos do Norte</em></h2>
+            <blockquote>Lanchonete e petiscaria do interior do Espírito Santo, com cardápio de 110 itens no ar em um dia. Aponte a câmera e faça um pedido de teste agora.</blockquote>
+            <div className="who"><b>Cardápio de demonstração</b> · pedidos de teste são bem-vindos</div>
+            <div style={{ marginTop: 20 }}><a className="btn big" href={DEMO} target="_blank" rel="noopener">Abrir o cardápio</a></div>
+          </div>
+          <div className="qr"><canvas ref={qr} /><small>Aponte a câmera</small></div>
+        </div>
+      </div></section>
+
+      <section className="lp-price alt" id="preco"><div className="wrap">
+        <div className="lp-center">
+          <div className="eyebrow">Preço único</div>
+          <h2>Um plano. <em>Tudo incluso</em>.</h2>
+          <p className="lead">Menos do que a comissão de três pedidos por dia.</p>
+        </div>
+        <div className="box">
+          <div className="plans">
+            <button type="button" className={'plan' + (plano === 'mensal' ? ' on' : '')} onClick={() => setPlano('mensal')}>
+              <div className="l">Mensal</div><div className="v">{brl(PRECO_MES)}<small> /mês</small></div><div className="eq">Sem fidelidade</div>
+            </button>
+            <button type="button" className={'plan' + (plano === 'anual' ? ' on' : '')} onClick={() => setPlano('anual')}>
+              <span className="tag">Mais escolhido</span>
+              <div className="l">Anual</div><div className="v">{brl(PRECO_ANO)}<small> /ano</small></div><div className="eq">Sai por {brl(PRECO_ANO / 12)}/mês · 2 meses grátis</div>
+            </button>
+          </div>
+          <ul>
+            <li>Cardápio digital com a sua identidade + QR Code</li>
+            <li>Pedido pelo WhatsApp, sem taxa por pedido</li>
+            <li>Painel de pedidos em tempo real (cozinha e balcão)</li>
+            <li>Painel para editar itens, preços, fotos e "esgotado"</li>
+            <li>Fotos dos pratos geradas por IA</li>
+            <li>Relatórios: mais vendidos, faturamento, clientes</li>
+            <li>Montagem do cardápio inclusa: manda foto ou PDF e a gente sobe</li>
+            <li>Suporte direto no WhatsApp com quem criou o sistema</li>
+            {plano === 'anual' && <li>Domínio próprio (ex.: cardapiodoseubar.com.br)</li>}
+          </ul>
+          <a className="btn big glow" href={link} target="_blank" rel="noopener" style={{ width: '100%' }}>
+            {plano === 'anual' ? `Assinar anual por ${brl(PRECO_ANO)}` : `Assinar mensal por ${brl(PRECO_MES)}`}
+          </a>
+          <div className="guar"><span style={{ fontSize: 26 }}>🛡️</span><div><b>Sem risco</b>Não gostou em 7 dias? Devolvemos o valor. Sem pergunta, sem burocracia.</div></div>
+          <p className="fine">Pix, boleto ou cartão. Acesso ao painel no mesmo dia do pagamento.</p>
+        </div>
+      </div></section>
+
+      <section><div className="wrap">
         <div className="eyebrow">Comparativo</div>
-        <h2>Faça a <em>conta</em>.</h2>
+        <h2>Papel, aplicativo ou <em>Mesafy</em>?</h2>
         <div className="tbl-wrap"><table>
           <thead><tr><th></th><th>Papel + anotação</th><th>Marketplace</th><th className="me">Mesafy</th></tr></thead>
           <tbody>
@@ -154,30 +210,40 @@ export default function Home() {
             <tr><td>Contato do cliente fica com você</td><td>Não</td><td>Não</td><td className="me">Sim, no seu WhatsApp</td></tr>
             <tr><td>Mudar preço ou item</td><td>Reimprimir</td><td>Pelo app deles</td><td className="me">Na hora, no seu painel</td></tr>
             <tr><td>Identidade visual</td><td>A sua</td><td>A deles</td><td className="me">A sua</td></tr>
+            <tr><td>Pedido chega na cozinha</td><td>Pelo garçom</td><td>Pela impressora deles</td><td className="me">Painel em tempo real</td></tr>
           </tbody>
         </table></div>
       </div></section>
 
-      <section><div className="wrap">
+      <section className="alt"><div className="wrap">
         <div className="eyebrow">Perguntas frequentes</div>
         <h2>O que todo dono <em>pergunta</em>.</h2>
         <div style={{ marginTop: 20 }}>
-          <details><summary>Preciso de WhatsApp Business ou número novo?</summary><p>Não. Funciona com o WhatsApp que você já usa. O pedido chega como uma mensagem normal do cliente. Se quiser organizar com etiquetas, o WhatsApp Business gratuito ajuda, mas não é obrigatório.</p></details>
+          <details><summary>Preciso de WhatsApp Business ou número novo?</summary><p>Não. Funciona com o WhatsApp que você já usa. O pedido chega como uma mensagem normal. Se quiser organizar com etiquetas, o WhatsApp Business gratuito ajuda, mas não é obrigatório.</p></details>
           <details><summary>Meu cliente precisa instalar alguma coisa?</summary><p>Não. O QR abre o cardápio no navegador do celular. O único aplicativo envolvido é o WhatsApp, que ele já tem.</p></details>
           <details><summary>Quem monta o cardápio?</summary><p>A gente. Você manda foto ou PDF do cardápio atual e em até um dia útil ele está no ar. Depois, você mesmo edita pelo painel quando quiser.</p></details>
           <details><summary>Funciona para delivery?</summary><p>Hoje o foco é pedido na mesa e retirada no balcão. Delivery com taxa por bairro está em desenvolvimento e entra sem custo extra para quem já assina.</p></details>
-          <details><summary>E se eu quiser cancelar?</summary><p>No plano mensal, cancela a qualquer momento e o cardápio fica no ar até o fim do período pago. No anual, o valor é o de 10 meses, com 2 de bônus.</p></details>
-          <details><summary>Tem taxa por pedido?</summary><p>Nenhuma. O valor é fixo, independente de quantos pedidos você receber.</p></details>
+          <details><summary>Tem taxa por pedido ou por mesa?</summary><p>Nenhuma. O valor é fixo, independente de quantos pedidos, mesas ou itens você tiver.</p></details>
+          <details><summary>E se eu quiser cancelar?</summary><p>No mensal, cancela a qualquer momento e o cardápio fica no ar até o fim do período pago. No anual, você paga 10 meses e usa 12.</p></details>
+          <details><summary>Quem está por trás do Mesafy?</summary><p>Igor Caetano, profissional de marketing e negócios do Espírito Santo. O suporte é feito por ele, no WhatsApp, sem robô e sem fila.</p></details>
+        </div>
+        <div className="maker">
+          <div className="av">IC</div>
+          <div>
+            <div className="nm">Igor Caetano · criador do Mesafy</div>
+            <p>Criei o Mesafy depois de ver quanto um bar do interior perde em comissão e pedido errado. Qualquer dúvida, me chama direto. Respondo pessoalmente.</p>
+            <div style={{ marginTop: 10 }}><a className="btn ghost" href={zap('Olá Igor! Vi o site do Mesafy e quero saber mais para o meu estabelecimento.')} target="_blank" rel="noopener">Falar com o Igor no WhatsApp</a></div>
+          </div>
         </div>
       </div></section>
 
-      <section className="lp-final alt"><div className="wrap">
+      <section className="lp-final"><div className="bg" /><div className="wrap">
         <div className="eyebrow">Comece hoje</div>
         <h2>Seu cardápio no ar <em>amanhã</em>.</h2>
-        <p className="lead" style={{ margin: '12px auto 0' }}>Assine, mande o cardápio atual pelo WhatsApp e receba o QR Code pronto para imprimir.</p>
+        <p className="lead" style={{ marginInline: 'auto' }}>Assine, mande o cardápio atual pelo WhatsApp e receba o QR Code pronto para imprimir.</p>
         <div className="ctas">
-          <a className="btn big" href="#preco">Assinar o Mesafy</a>
-          <a className="btn big ghost" href={zap('Olá! Quero saber mais sobre o Mesafy para o meu estabelecimento.')} target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
+          <a className="btn big glow" href="#preco">Assinar o Mesafy</a>
+          <a className="btn big ghost" href={zap('Olá Igor! Quero tirar uma dúvida sobre o Mesafy.')} target="_blank" rel="noopener">Tirar dúvida no WhatsApp</a>
         </div>
       </div></section>
 
@@ -185,6 +251,8 @@ export default function Home() {
         <span>Mesafy · Cardápio digital com pedido pelo WhatsApp</span>
         <span>Espírito Santo, Brasil · <Link to="/login">Área do cliente</Link></span>
       </div></footer>
+
+      <a className="lp-zap" href={zap('Olá Igor! Vi o site do Mesafy e quero saber mais.')} target="_blank" rel="noopener" aria-label="Falar no WhatsApp"><ZapIcon />WhatsApp</a>
     </div>
   )
 }
